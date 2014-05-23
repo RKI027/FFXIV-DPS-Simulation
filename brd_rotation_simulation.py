@@ -360,6 +360,22 @@ class avgSimulation:
     def print_statistics(self):
         self._statistics.print_statistics()
             
+def ComputeWeights(BaseAtt):
+    si = avgSimulation(100,BaseAtt,300.0)
+    si.run()
+    for i in {'DEX', 'CRT', 'DTR', 'SKS', 'WD'}:
+        curAtt = BaseAtt.copy()
+        curAtt[i] = curAtt[i] * 1.01
+        s = avgSimulation(100,curAtt,300.0)
+        s.run()
+        BaseAtt['w'+i] = s.Statistics['TotalDmg'] / s.Statistics['Time']
+    tdeltaDEXDPS = BaseAtt['wDEX'] - si.Statistics['TotalDmg'] / s.Statistics['Time'])
+    BaseAtt['wWD'] = (BaseAtt['wWD'] - si.Statistics['TotalDmg'] / s.Statistics['Time']) / tdeltaDEXDPS
+    BaseAtt['wCRT'] = (BaseAtt['wCRT'] - si.Statistics['TotalDmg'] / s.Statistics['Time']) / tdeltaDEXDPS
+    BaseAtt['wDTR'] = (BaseAtt['wDTR'] - si.Statistics['TotalDmg'] / s.Statistics['Time']) / tdeltaDEXDPS
+    BaseAtt['wSKS'] = (BaseAtt['wSKS'] - si.Statistics['TotalDmg'] / s.Statistics['Time']) / tdeltaDEXDPS
+    BaseAtt['wDEX'] = 1.0
+        
 
 
 Attributes = [{'Name': 'Current', 'DEX': 506.0, 'CRT': 530.0, 'DTR': 276.0, 'SKS': 388.0, 'WD': 41, 'AAWD': 44.84}, \
@@ -376,3 +392,5 @@ for i in Attributes:
     print("Run for {} set".format(i['Name']))
     s.print_statistics()
     print()
+    
+ComputeWeights(Attirbutes[1])
